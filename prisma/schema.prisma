@@ -60,7 +60,7 @@ model Conversation {
   isGroup       Boolean?
 
   messagesIds String[]  @db.ObjectId
-  messsages   Message[]
+  messages   Message[]
 
   userIds String[] @db.ObjectId
   users   User[]   @relation(fields: [userIds], references: [id])
@@ -69,7 +69,7 @@ model Conversation {
 model Message {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   body      String?
-  images    String?
+  image    String?
   createdAt String?
 
   seenIds String[] @db.ObjectId
