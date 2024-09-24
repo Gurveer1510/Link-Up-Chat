@@ -23,7 +23,7 @@ function UserBox({ data }: UserBoxProps) {
                 userId: data.id
             })
             if(response.data){
-                router.push(`/conversations/${data.id}`)
+                router.push(`/conversations/${response.data.id}`)
             }
             setIsLoading(false)
         } catch (error) {
