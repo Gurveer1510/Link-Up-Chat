@@ -1,9 +1,11 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import useOtherUser from "@/app/hooks/useOtherUser"
+import ProfileDrawer from "./ProfileDrawer"
 import { Conversation, User } from "@prisma/client"
 import { HiChevronLeft } from "react-icons/hi"
+import AvatarGroup from "@/app/components/AvatarGroup"
 import Link from "next/link"
 import Avatar from "@/app/components/Avatar"
 import { HiEllipsisHorizontal } from "react-icons/hi2"
@@ -19,6 +21,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
 
     const otherUser = useOtherUser(conversation)
+    const [drawerOpen, setDrawerOpen] = useState(false)
 
     const statusText = useMemo(() => {
         if (conversation.isGroup) {
@@ -30,8 +33,14 @@ const Header: React.FC<HeaderProps> = ({
     }, [conversation])
 
     return (
-        <div
-            className="
+        <>
+            <ProfileDrawer
+                data={conversation}
+                isOpen={drawerOpen}
+                onClose={() => setDrawerOpen(prev => !prev)}
+            />
+            <div
+                className="
             bg-white 
             w-full
             flex
@@ -44,43 +53,47 @@ const Header: React.FC<HeaderProps> = ({
             items-center
             shadow-sm
         ">
-            <div
-                className="
+                <div
+                    className="
                 flex
                 gap-3
                 items-center
             ">
-                <Link
-                    href="/conversations"
-                    className="lg:hidden block text-sky-500 hover:text-sky-600 transition cursor-pointer"
-                >
-                    <HiChevronLeft size={32} />
-                </Link>
-                <Avatar currentUser={otherUser} />
-                <div className="flex flex-col">
-                    <div>
-                        {
-                            conversation.name || otherUser.name
-                        }
-                    </div>
-                    <div 
-                        className="
+                    <Link
+                        href="/conversations"
+                        className="lg:hidden block text-sky-500 hover:text-sky-600 transition cursor-pointer"
+                    >
+                        <HiChevronLeft size={32} />
+                    </Link>
+                    {
+                        conversation.isGroup ? (<AvatarGroup users={conversation.users} />) : (<Avatar currentUser={otherUser} />)
+                    }
+
+                    <div className="flex flex-col">
+                        <div>
+                            {
+                                conversation.name || otherUser.name
+                            }
+                        </div>
+                        <div
+                            className="
                             text-sm
                             font-light
                             text-neutral-500
 
                         "
-                    >
-                        {statusText}
+                        >
+                            {statusText}
+                        </div>
                     </div>
                 </div>
+                <HiEllipsisHorizontal
+                    size={32}
+                    onClick={() => setDrawerOpen(true)}
+                    className="text-sky-500 cursor-pointer hover:text-sky-600 transition"
+                />
             </div>
-            <HiEllipsisHorizontal 
-                size={32}
-                onClick={() => {}}
-                className="text-sky-500 cursor-pointer hover:text-sky-600 transition"
-            />
-        </div>
+        </>
     )
 }
 

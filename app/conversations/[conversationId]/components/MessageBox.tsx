@@ -1,7 +1,7 @@
 "use client"
 
 import { FullMessageType } from "@/app/types"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import clsx from "clsx"
 import Avatar from "@/app/components/Avatar"
@@ -9,6 +9,7 @@ import { format } from "date-fns"
 import Image from "next/image"
 import axios from "axios"
 import useConversation from "@/app/hooks/useConversation"
+import ImageModal from "./ImageModal"
 
 interface MessageBoxProps {
     data: FullMessageType
@@ -26,6 +27,8 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     .filter((user) => user.email !== data?.sender?.email)
     .map((user) => user.name)
     .join(", " )
+
+    const [imageModalOpen, setImageModalOpen] = useState(false)
 
     const container = clsx(
         "flex gap-3 p-4",
@@ -64,9 +67,15 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                     </div>
                 </div>
                 <div className={message}>
+                    <ImageModal
+                        src={data.image}
+                        isOpen={imageModalOpen}
+                        onClose={() => setImageModalOpen(false)}
+                    />
                     {
                         data.image ? (
                             <Image
+                                onClick={() => setImageModalOpen(true)}
                                 alt="Image"
                                 height={288}
                                 width={288}

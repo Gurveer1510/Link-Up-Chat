@@ -1,6 +1,7 @@
 "use client"
 
 import Avatar from '@/app/components/Avatar'
+import LoadingModal from '@/app/components/LoadingModal'
 import { User } from '@prisma/client'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
@@ -22,23 +23,28 @@ function UserBox({ data }: UserBoxProps) {
             const response = await axios.post("/api/conversations", {
                 userId: data.id
             })
-            if(response.data){
+            if (response.data) {
                 router.push(`/conversations/${response.data.id}`)
             }
             setIsLoading(false)
         } catch (error) {
             console.log(error);
-            
-        } finally{
+
+        } finally {
             setIsLoading(false)
         }
 
     }, [data, router])
 
     return (
-        <div
-            onClick={handleClick}
-            className='
+        <>  
+            {
+                isLoading && (<LoadingModal />)
+            }
+            
+            <div
+                onClick={handleClick}
+                className='
                 w-full
                 relative
                 flex
@@ -51,18 +57,19 @@ function UserBox({ data }: UserBoxProps) {
                 transition
                 cursor-pointer
             '
-        >
-            <Avatar currentUser={data}/>
-            <div className='min-w-0 flex-1'>
-                <div className="focus:outline-none">
-                    <div className='flex justify-between items-center mb-1'>
-                        <p className='text-sm font-medium text-gray-900'>
-                            {data.name}
-                        </p>
+            >
+                <Avatar currentUser={data} />
+                <div className='min-w-0 flex-1'>
+                    <div className="focus:outline-none">
+                        <div className='flex justify-between items-center mb-1'>
+                            <p className='text-sm font-medium text-gray-900'>
+                                {data.name}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 
