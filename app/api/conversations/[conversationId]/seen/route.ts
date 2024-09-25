@@ -78,7 +78,7 @@ export async function POST(
         await pusherServer.trigger(conversationId!, "message:update", updatedMessage)
 
         return NextResponse.json(updatedMessage)
-    } catch (error: unknow) {
+    } catch (error: unknown) {
         console.log(error, "ERROR_MESSAGES_SEEN")
         return new NextResponse("Internal Error", { status: 500 })
     }
