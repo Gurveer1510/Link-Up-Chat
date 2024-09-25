@@ -1,13 +1,12 @@
 "use client"
 
 import { FullMessageType } from "@/app/types"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useSession } from "next-auth/react"
 import clsx from "clsx"
 import Avatar from "@/app/components/Avatar"
 import { format } from "date-fns"
 import Image from "next/image"
-import axios from "axios"
 import useConversation from "@/app/hooks/useConversation"
 import ImageModal from "./ImageModal"
 
@@ -21,7 +20,6 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     isLast
 }) => {
     const session = useSession()
-    const {conversationId} = useConversation()
     const isOwn = session?.data?.user?.email === data?.sender?.email
     const seenList = (data.seen || [])
     .filter((user) => user.email !== data?.sender?.email)
