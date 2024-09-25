@@ -1,7 +1,6 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb"
-import { runInNewContext } from "vm";
 import { pusherServer } from "@/app/libs/pusher";
 
 export async function POST(request : Request) {
@@ -103,7 +102,8 @@ export async function POST(request : Request) {
         
         return NextResponse.json(newConversation)
 
-    } catch (error) {
+    } catch (error: unknown) {
+        console.log(error, "ERROR_CONVERSATION")
         return new NextResponse("Internal Error", {status: 500})
     }
 }

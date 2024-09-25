@@ -8,10 +8,6 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import prisma from "@/app/libs/prismadb"
 
-interface CredentailsType {
-    email? : string
-    password? : string
-}
 
 export const authOptions: AuthOptions = {
     adapter: PrismaAdapter(prisma),
@@ -30,11 +26,11 @@ export const authOptions: AuthOptions = {
                 email: { label : "email", type: "text" },
                 password: { label : "password", type: 'text' }
             },
-            async authorize(credentials : Record<"email" | "password", string> | undefined, req: Pick<RequestInternal, "query" | "headers" | "body" | "method">) {
+            async authorize(credentials : Record<"email" | "password", string> | undefined, _req: Pick<RequestInternal, "query" | "headers" | "body" | "method">) {
                 if(!credentials?.email || !credentials?.password){
                     throw new Error("Invalid Credentials")
                 }
-
+                
                 const user = await prisma.user.findUnique({
                     where:{
                         email: credentials.email

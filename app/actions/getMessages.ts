@@ -17,7 +17,8 @@ const getMessages = async (
             }
         })
         return messages
-    } catch (error: any) {
+    } catch (error: unknown) {
+        console.log(error, "ERROR_GET_MESSAGES")
         return null
     }
 }

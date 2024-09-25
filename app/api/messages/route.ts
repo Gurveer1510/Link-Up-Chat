@@ -15,7 +15,7 @@ export async function POST(
             image,
             conversationId
         } = body
-        
+
         if (!currentUser?.id || !currentUser?.email) {
             return new NextResponse("Unauthoried", { status: 401 })
         }
@@ -59,10 +59,10 @@ export async function POST(
                     }
                 }
             },
-            include:{
+            include: {
                 users: true,
-                messages:{
-                    include:{
+                messages: {
+                    include: {
                         seen: true
                     }
                 }
@@ -74,15 +74,17 @@ export async function POST(
         const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1]
 
         updatedConversation.users.map((user) => {
-            pusherServer.trigger(user?.email!, "conversation:update", {
-                id: conversationId,
-                messages: [lastMessage]
-            })
-        })
+            if (user?.email) {
+                pusherServer.trigger(user.email, "conversation:update", {
+                    id: conversationId,
+                    messages: [lastMessage],
+                });
+            }
+        });
 
         return NextResponse.json(newMessage)
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.log(error, "ERROR MESSAGE")
         return new NextResponse("Internal Error", { status: 500 })
     }

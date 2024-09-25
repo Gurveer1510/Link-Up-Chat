@@ -33,7 +33,8 @@ const getConversations = async () => {
 
         return conversations
 
-    } catch (error: any) {
+    } catch (error: unknown) {
+        console.log(error, "ERROR_GET_CONVERSATION")
         return []
     }
 
